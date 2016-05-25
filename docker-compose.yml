@@ -1,0 +1,24 @@
+version: '2'
+services:
+  db:
+    image: mongo:latest
+    volumes:
+      - "$PWD/mute-data:/data/db"
+    ports: 
+      - "27017:27017"
+
+  mute:
+    image: mute/mute-demo
+    ports:
+      - "9080:8080"
+      - "9000:8000"
+    depends_on:
+      - db
+    links:
+      - db
+    environment:
+      - OPENSHIFT_MONGODB_DB_HOST=db
+#      - SIGNALING_SERVER_HOST=10.10.98.185
+#      - SIGNALING_SERVER_PORT=8000
+    command: bash -c "sleep  3 && node app.js"
+  
